@@ -1,0 +1,80 @@
+- logo built in Figma
+- [Cool Images](https://undraw.co/)
+
+
+export const JOB_SORT_BY = {
+    NEWEST_FIRST = "newest",
+    OLDEST_FIRST = "oldest", 
+}
+
+export const JOB_STATUS = {
+    PENDING = "pending",
+    INTERVIEW = "interview",
+    REJECTED = "rejected"
+}
+
+
+const JobSchema = new mongoose.Schema(
+    {
+        company: String,
+        position: String,
+        jobStatus : {
+            type : String,
+            enum : Object.values(JOB_STATUS),
+            default : JOB_STATUS.PENDING,
+        },
+        jobType : {
+            type : String , 
+            enum : Object.values(JOB_TYPE),
+            default : JOB_TYPE.FULL_TIME
+        }
+    }
+)
+
+
+🔥--->why are we using async i couldnt underestand clearly
+Great question! Understanding why we use async is key when working with things like API calls — and once you get it, it really clears up a lot.
+Let’s break it down simply:
+🔁 What does async do?
+When you make a request like this:
+await customFetch.post('/auth/login', data);
+You're talking to a server, which might take some time to respond — maybe a few milliseconds, or even a few seconds. While that’s happening, JavaScript doesn't want to freeze the entire app.
+That's why we use:
+👉 async + await = Handle async code like it's synchronous
+It lets your code "pause" at that line until the server replies, but without freezing the rest of your app.
+
+🔧 Without async/await, you'd use .then()/.catch():
+customFetch.post('/auth/login', data)
+  .then(response => {
+    // handle success
+  })
+  .catch(error => {
+    // handle error
+  });
+But with async/await, it’s cleaner and easier to read:
+const loginDemoUser = async () => {
+  try {
+    await customFetch.post('/auth/login', data);
+    // success logic
+  } catch (error) {
+    // error logic
+  }
+};
+ So, to answer your question:
+❓ Why do we use async here?
+Because we're making a network request, which takes time. async lets us await that request and:
+Wait for the result
+Handle success or failure
+Keep our code clean and readable
+Avoid blocking the rest of the UI while waiting
+🧠 Bonus Tip:
+Any function that uses await must be marked as async. Otherwise, it’ll throw an error.
+So this would fail:
+// ❌ This will break!
+const login = () => {
+  await something(); // SyntaxError
+}
+But this is fine:
+const login = async () => {
+  await something(); // ✅
+}
